@@ -7,6 +7,7 @@ router.get('/', (req, res) => {
   res.send('this is root page')
 });
 
+// 굿즈 목록 조회
 router.get('/goods', async (req, res) => {
   const { category } = req.query;
 
@@ -17,16 +18,33 @@ router.get('/goods', async (req, res) => {
   });
 });
 
-router.get('/goods/:goodsId', async (req, res) => {
-  const { goodsId } = req.params;
+// 장바구니 목록 조회
+router.get('/goods/cart', async (req, res) => {
+  const carts = await Cart.find();
+  const goodsIds = carts.map((cart) => cart.goodsId);
 
-  const [detail] = await Goods.find({ goodsId: Number(goodsId) });
+  const good = await Goods.find({ goodsId: goodsIds });
 
   res.json({
-    detail,
+    cart: carts.map((cart) => ({
+      quantity: cart.quantity,
+      goods: good.find((item) => item.goodsId === cart.goodsId),
+    })),
   });
 });
 
+// 굿즈 상세 조회
+router.get('/goods/:goodsId', async (req, res) => {
+  const { goodsId } = req.params;
+
+  const [goods] = await Goods.find({ goodsId: Number(goodsId) });
+
+  res.json({
+    goods,
+  });
+});
+
+// 굿즈 장바구니에 넣기
 router.post('/goods/:goodsId/cart', async (req, res) => {
   const { goodsId } = req.params;
   const { quantity } = req.body;
@@ -42,6 +60,7 @@ router.post('/goods/:goodsId/cart', async (req, res) => {
 
 });
 
+// 굿즈 장바구니에서 지우기
 router.delete('/goods/:goodsId/cart', async (req, res) => {
   const { goodsId } = req.params;
 
@@ -53,20 +72,26 @@ router.delete('/goods/:goodsId/cart', async (req, res) => {
   res.json({ success: true })
 });
 
+// 굿즈 장바구니에서 수정하기
 router.put('/goods/:goodsId/cart', async (req, res) => {
   const { goodsId } = req.params;
   const { quantity } = req.body;
 
-  const existscarts = await Cart.find({ goodsId: Number(goodsId) });
-  if (!existscarts.length) {
-    return res.status(400).json({ success: false, errorMessage: '장바구니에 해당 상품이 없습니다.' });
+  if (quantity < 1) {
+    return res.status(400).json({errorMessage: '0개 이하로는 수정할 수 없습니다.'});
   }
 
-  await Cart.updateOne({ goodsId: Number(goodsId) }, { $set: { quantity } })
+  const existscarts = await Cart.find({ goodsId: Number(goodsId) });
+  if (!existscarts.length) {
+    await Cart.create({ goodsId: Number(goodsId), quantity });
+  } else {
+    await Cart.updateOne({ goodsId: Number(goodsId) }, { $set: { quantity } })
+  }
 
   res.json({success: true})
 })
 
+// 굿즈 추가하기
 router.post('/goods', async (req, res) => {
   const { goodsId, name, thumbnailUrl, category, price } = req.body;
 
