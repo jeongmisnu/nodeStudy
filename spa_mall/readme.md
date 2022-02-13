@@ -1,0 +1,126 @@
+# 노드 연습하기
+## 굿즈 API
+- 굿즈
+  - 목록 불러오기 (GET)
+  - 상세 목록 불러오기 (GET)
+- 장바구니
+  - 목록 불러오기 (GET)
+  - 상품 추가하기 (POST)
+  - 수정하기 (PUT)
+  - 지우기 (DELETE)
+
+## 블로그 API
+- 유저
+  - 회원가입
+    - **Requst**
+      - Method : POST
+      - URL : /users
+      - Body : {email: string, pw: string, name: string}
+    - **Response**
+      - HTTP Status Code : 201
+      - Payload : 
+        - {token: string}
+  - 로그인
+    - **Requst**
+        - Method : GET
+        - URL : /login
+        - Body : {email: string, pw: string}
+    - **Response**
+      - HTTP Status Code : 200
+      - Payload : 
+        - {token: string}
+  - 정보 수정
+    - **Requst**
+      - Method : PUT
+      - URL : /users/:userId
+      - Body : {email: string, pw: string, name: string,}
+    - **Response**
+      - HTTP Status Code : 201
+      - Payload : 
+        - {success: boolean, message: string}
+  - 탈퇴
+    - **Requst**
+        - Method : DELETE
+        - URL : /users/:userId
+      - **Response**
+        - HTTP Status Code : 200
+        - Payload : 
+          - {success: boolean, message: string}
+- 글
+  - 글쓰기
+    - **Requst**
+      - Method : POST
+      - URL : /post
+      - Body : {authorId: number, title: string, content: string}
+    - **Response**
+      - HTTP Status Code : 201
+      - Payload : 
+        - {postId: number}
+  - 글 목록 불러오기
+    - **Requst**
+        - Method : GET
+        - URL : /posts
+    - **Response**
+      - HTTP Status Code : 200
+      - Payload : 
+        - {postId: number, title: string, content: string, authorId: number}[]
+  - 상세 불러오기
+    - **Requst**
+        - Method : GET
+        - URL : /posts/:postId
+    - **Response**
+      - HTTP Status Code : 200
+      - Payload : 
+        - {postId: number, title: string, content: string, authorId: number}[]
+  - 수정하기
+    - **Requst**
+      - Method : PUT
+      - URL : /posts/:postId
+      - Body : {title: string, content: string}
+    - **Response**
+      - HTTP Status Code : 200
+      - Payload : 
+        - {success: boolean, message: string}
+  - 삭제하기
+    - **Requst**
+      - Method : DELETE
+      - URL : /posts/:postId
+    - **Response**
+      - HTTP Status Code : 200
+      - Payload : 
+        - {success: boolean, message: string}
+- 댓글
+  - 특정 게시글에 댓글 작성
+    - **Requst**
+      - Method : POST
+      - URL : /posts/:postId/comments
+      - Body : {authorId: number, comment: string}
+    - **Response**
+      - HTTP Status Code : 201
+      - Payload : 
+        - {commentId: number}
+  - 댓글 목록 조회
+  - **Requst**
+      - Method : GET
+      - URL : /posts/:postId/comments
+    - **Response**
+      - HTTP Status Code : 200
+      - Payload : 
+        - {conmment: string,commentId: number}[]
+  - 댓글 수정
+  - **Requst**
+      - Method : PUT
+      - URL : /posts/:postId/comments/:commentId
+      - Body : {comment: string}
+    - **Response**
+      - HTTP Status Code : 200
+      - Payload : 
+        - {message: string}
+  - 댓글 삭제
+  - **Requst**
+      - Method : DELETE
+      - URL : /posts/:postId/comments/:commentId
+    - **Response**
+      - HTTP Status Code : 200
+      - Payload : 
+        - {message: string}
