@@ -66,10 +66,10 @@ else if (condition2)
 else if (condition3)
 	name = condition3;
 else
-	name = '강승현';
+	name = '정민수';
 
 // 같은 표현
-const name = condition1 || condition2 || condition3 || '강승현';
+const name = condition1 || condition2 || condition3 || '정민수';
 
 // 각 조건이 존재하는지 condition1부터 체크하며 값이 존재하면 해당 조건에 있는 값을 result의 값으로 사용한다고 가정할 경우, 위와 같은 구문을 아래의 구문으로 똑같이 구현 가능합니다.
 
